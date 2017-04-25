@@ -135,11 +135,13 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		playerMotionManager.startAccelerometerUpdates(to: OperationQueue.main, withHandler: handler)
 	}
 	
+	// 画面の更新
 	func viewUpdate() {
 		// ボール
 		var posX = self.ballImage.center.x
 		var posY = self.ballImage.center.y
 		
+		// ボールに速度の追加
 		posX += vecX
 		posY += vecY
 		
