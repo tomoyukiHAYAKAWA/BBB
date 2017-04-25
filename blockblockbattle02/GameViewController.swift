@@ -34,7 +34,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	
 	// ボールの速度
 	var vecX : CGFloat = 7.0
-	var vecY : CGFloat = 7.0
+	var vecY : CGFloat = -7.0
 	
 	// ボールイメージ
 	@IBOutlet weak var ballImage: UIImageView!
@@ -158,6 +158,30 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		if posY >= self.screenSize.height {
 			vecY = vecY * -1
 		}
+		
+		if abs(ballImage.center.y - p1pad.center.y) <= ballImage.frame.height/2 + p1pad.frame.height/2 && abs(ballImage.center.x - p1pad.center.x) <= ballImage.frame.width/2 + p1pad.frame.width/2 {
+			// ボールが上面に衝突した場合
+			if posY < p1pad.center.y {
+				vecY = vecY * -1
+				self.ballImage.center = CGPoint(x: posX, y: posY+ballImage.frame.height/2)
+			}
+			// ボールが下面に衝突した場合
+//			if posY > p1pad.center.y {
+//				vecY = vecY * -1
+//				self.ballImage.center = CGPoint(x: posX, y: posY)
+//			}
+		}
+//		if ballImage.frame.intersects(p2pad.frame) {
+//			// ボールが上面に衝突した場合
+//			if posY <= p2pad.center.y {
+//				vecY = vecY * -1
+//			}
+//			// ボールが下面に衝突した場合
+//			if posY >= p2pad.center.y {
+//				vecY = vecY * -1
+//			}
+//		}
+		// ボールの位置の適用
 		self.ballImage.center = CGPoint(x: posX, y: posY)
 		
 	}
@@ -166,6 +190,8 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	func gameStart() {
 		
 		ballImage.isHidden = false
+		// ボールの最初の位置
+		ballImage.center = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
 		// 加速度の取得と送信の開始
 		startAccelerometer()
 		
