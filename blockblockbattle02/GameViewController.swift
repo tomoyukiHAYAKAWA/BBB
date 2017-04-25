@@ -10,6 +10,7 @@ import UIKit
 import CoreMotion
 import MultipeerConnectivity
 
+
 class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessionDelegate{
 	
 	@IBOutlet weak var p1pad: UIImageView!
@@ -31,11 +32,21 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	var session : MCSession!
 	var peerID: MCPeerID!
 	
+	// ボールの速度
+	var vecX : CGFloat = 7.0
+	var vecY : CGFloat = 7.0
+	
+	// ボールイメージ
+	@IBOutlet weak var ballImage: UIImageView!
+	
 	// 画面サイズの取得
 	let screenSize = UIScreen.main.bounds.size
 	
     override func viewDidLoad() {
         super.viewDidLoad()
+		
+		// 非表示
+		ballImage.isHidden = true
 		
 		// multipeerConnectivity関連
 		self.peerID = MCPeerID(displayName: UIDevice.current.name)
@@ -49,11 +60,15 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		self.assistant = MCAdvertiserAssistant(serviceType:serviceType,
 		                                       discoveryInfo:nil, session:self.session)
 		self.assistant.start()
+		
+		// 描画の更新
+		Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(self.viewUpdate), userInfo: nil, repeats: true)
 	
 		// MotionManagerを生成
 		playerMotionManager = CMMotionManager()
 		playerMotionManager.accelerometerUpdateInterval = 0.02
 		// 加速度による操作の開始
+		
     }
 
 	func barUpdate(speedX : Int, fromPeer peerID: MCPeerID) {
@@ -120,8 +135,35 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		playerMotionManager.startAccelerometerUpdates(to: OperationQueue.main, withHandler: handler)
 	}
 	
+	func viewUpdate() {
+		// ボール
+		var posX = self.ballImage.center.x
+		var posY = self.ballImage.center.y
+		
+		posX += vecX
+		posY += vecY
+		
+		// 画面端の当たり判定
+		if posX <= 0 {
+			vecX = vecX * -1
+		}
+		if posX >= self.screenSize.width {
+			vecX = vecX * -1
+		}
+		if posY <= 0 {
+			vecY = vecY * -1
+		}
+		if posY >= self.screenSize.height {
+			vecY = vecY * -1
+		}
+		self.ballImage.center = CGPoint(x: posX, y: posY)
+		
+	}
+	
 	// ゲーム開始
 	func gameStart() {
+		
+		ballImage.isHidden = false
 		// 加速度の取得と送信の開始
 		startAccelerometer()
 		
@@ -143,6 +185,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		// button was tapped)
 		showBrowser.isHidden = true
 		gameStart()
+		viewUpdate()
 		self.dismiss(animated: true, completion: nil)
 	}
 	

@@ -21,12 +21,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bar_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="j73-1J-daN">
-                                <rect key="frame" x="137" y="507" width="100" height="30"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bar_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="DlT-5i-l4M">
+                                <rect key="frame" x="130" y="109" width="115" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bar_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="DlT-5i-l4M">
-                                <rect key="frame" x="137" y="109" width="100" height="30"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bar_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="B7p-g8-ujt">
+                                <rect key="frame" x="172" y="318" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OMr-vd-zVG">
@@ -38,10 +38,15 @@
                                     <action selector="showBrowser:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yq1-WE-sbi"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bar_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="j73-1J-daN">
+                                <rect key="frame" x="130" y="509" width="115" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="ballImage" destination="B7p-g8-ujt" id="hdF-Je-VMx"/>
                         <outlet property="p1pad" destination="j73-1J-daN" id="KDR-w5-CyU"/>
                         <outlet property="p2pad" destination="DlT-5i-l4M" id="cii-dY-oYJ"/>
                         <outlet property="showBrowser" destination="OMr-vd-zVG" id="oZm-jS-3vc"/>
