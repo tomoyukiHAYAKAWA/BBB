@@ -36,15 +36,20 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	var vecX : CGFloat = 7.0
 	var vecY : CGFloat = -7.0
 	
+    var startTimer : Timer!
+    
 	// ボールイメージ
 	@IBOutlet weak var ballImage: UIImageView!
 	
 	// 画面サイズの取得
 	let screenSize = UIScreen.main.bounds.size
+    
+    // カウント秒
+    var second : Int = 0
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-		
+        
 		// 非表示
 		ballImage.isHidden = true
 		
@@ -62,8 +67,10 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		self.assistant.start()
 		
 		// 描画の更新
+        
+        
 		Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(self.viewUpdate), userInfo: nil, repeats: true)
-	
+        
 		// MotionManagerを生成
 		playerMotionManager = CMMotionManager()
 		playerMotionManager.accelerometerUpdateInterval = 0.02
@@ -122,7 +129,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 			// 相手に加速度の送信
 			let some : Double = self.p1SpeedX * 100000000000.0
 			var sendSpeedX : Int = Int(some)
-			print(sendSpeedX)
+			//print(sendSpeedX)
 			let data = NSData(bytes: &sendSpeedX, length: MemoryLayout<NSInteger>.size)
 			// 相手へ送信
 			do {
@@ -158,33 +165,49 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		if posY >= self.screenSize.height {
 			vecY = vecY * -1
 		}
-		
-		if abs(ballImage.center.y - p1pad.center.y) <= ballImage.frame.height/2 + p1pad.frame.height/2 && abs(ballImage.center.x - p1pad.center.x) <= ballImage.frame.width/2 + p1pad.frame.width/2 {
-			// ボールが上面に衝突した場合
-			if posY < p1pad.center.y {
-				vecY = vecY * -1
-				self.ballImage.center = CGPoint(x: posX, y: posY+ballImage.frame.height/2)
-			}
-			// ボールが下面に衝突した場合
-//			if posY > p1pad.center.y {
-//				vecY = vecY * -1
-//				self.ballImage.center = CGPoint(x: posX, y: posY)
-//			}
-		}
-//		if ballImage.frame.intersects(p2pad.frame) {
-//			// ボールが上面に衝突した場合
-//			if posY <= p2pad.center.y {
-//				vecY = vecY * -1
-//			}
-//			// ボールが下面に衝突した場合
-//			if posY >= p2pad.center.y {
-//				vecY = vecY * -1
-//			}
-//		}
+        
+        // プレイヤー1のパッドの当たり判定
+        if ballImage.frame.intersects(p1pad.frame) {
+            // 上からボールが来た時
+            let ballPosY = self.ballImage.frame.minY
+
+            if ballPosY < self.p1pad.frame.minY {
+                posY -= self.ballImage.frame.height/2
+                vecY = vecY * -1
+            } else if ballPosY > self.p1pad.frame.minY {
+                posY += self.ballImage.frame.height/2
+                vecY = vecY * -1
+            }
+        }
+        
+        // プレイヤー2のパッドの当たり判定
+        if ballImage.frame.intersects(p2pad.frame) {
+            // 上からボールが来た時
+            let ballPosY = self.ballImage.frame.minY
+            
+            if ballPosY < self.p2pad.frame.minY {
+                posY -= self.ballImage.frame.height/2
+                vecY = vecY * -1
+            } else if ballPosY > self.p2pad.frame.minY {
+                posY += self.ballImage.frame.height/2
+                vecY = vecY * -1
+            }
+        }
+        
 		// ボールの位置の適用
 		self.ballImage.center = CGPoint(x: posX, y: posY)
 		
 	}
+    
+    func startCount() {
+        print("timer start")
+        showBrowser.isHidden = true
+        second += 1
+        if second >= 4 {
+            startTimer.invalidate()
+            gameStart()
+        }
+    }
 	
 	// ゲーム開始
 	func gameStart() {
@@ -211,9 +234,21 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		_ browserViewController: MCBrowserViewController)  {
 		// Called when the browser view controller is dismissed (ie the Done
 		// button was tapped)
+        // ブラウザーボタンの非表示
 		showBrowser.isHidden = true
-		gameStart()
-		viewUpdate()
+        // 準備完了のパスワード
+        var reday = 19193773
+        let data = NSData(bytes: &reday, length: MemoryLayout<NSInteger>.size)
+        
+        // 相手へ送信
+        do {
+            try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+        } catch {
+            print(error)
+        }
+        // タイマーの開始
+        startTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.startCount), userInfo: nil, repeats: true)
+        startTimer.fire()
 		self.dismiss(animated: true, completion: nil)
 	}
 	
@@ -225,14 +260,26 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	}
 	
 	// 相手からNSDataが送られてきたとき
-	func session(_ session: MCSession, didReceive data: Data,
-	             fromPeer peerID: MCPeerID)  {
+	func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID)  {
 		DispatchQueue.main.async() {
-			let data = NSData(data: data)
-			var p2SpeedX : NSInteger = 0
-			data.getBytes(&p2SpeedX, length: data.length)
+			
+            let data = NSData(data: data)
+			var getData : NSInteger = 0
+            
+            // 送られてきたデータ
+			data.getBytes(&getData, length: data.length)
+            
+            // 相手の準備が完了
+            if getData == 19193773 {
+                self.vecX = -7.0
+                self.vecY = 7.0
+                
+                self.startTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.startCount), userInfo: nil, repeats: true)
+                self.startTimer.fire()
+            }
+            
 			// ラベルの更新
-			self.barUpdate(speedX: p2SpeedX, fromPeer: peerID)
+			self.barUpdate(speedX: getData, fromPeer: peerID)
 		}
 	}
 	
