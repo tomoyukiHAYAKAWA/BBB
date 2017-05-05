@@ -14,8 +14,14 @@ import MultipeerConnectivity
 class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessionDelegate{
 	
 	@IBOutlet weak var p1pad: UIImageView!
-	
 	@IBOutlet weak var showBrowser: UIButton!
+    
+    @IBOutlet weak var blueBlockImage: UIImageView!
+    @IBOutlet weak var yellowBlockImage: UIImageView!
+    @IBOutlet weak var redBlockImage: UIImageView!
+    @IBOutlet weak var greenBlockImage: UIImageView!
+   
+    
 	
 	// 加速度の宣言
 	var playerMotionManager : CMMotionManager!
@@ -128,6 +134,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		if posX >= self.screenSize.width {
 			vecX = vecX * -1
 		}
+        // ボールが画面上部へ行った時
 		if posY <= 0 {
 			
             // 相手へボールの座標の送信
@@ -138,6 +145,9 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             } catch {
                 print(error)
             }
+            
+            //ボールを見えなくする
+            ballImage.isHidden = true
             
 		}
 		if posY >= self.screenSize.height {
@@ -227,16 +237,19 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID)  {
 		DispatchQueue.main.async() {
 			
+            // 送られてきたデータ
             let data = NSData(data: data)
             var getData : NSInteger = 0
-//            var getPoint : CGPoint!
+            var getPoint : CGPoint!
             
-//            if (data.length == MemoryLayout<CGPoint>.size) {
-//                var receivedPoint = UnsafePointer(<CGPoint>(data.bytes).memory)
-//            } else {
-//                // error
-//            }
-//        
+            // CGPointが送られてきたとき
+            if (data.length == MemoryLayout<CGPoint>.size) {
+                //var receivedPoint = UnsafePointer<CGPoint>(data.bytes).memory
+                data.getBytes(&getPoint, length: data.length)
+                print("\(getPoint.x), \(getPoint.y)")
+            }
+        
+            // NSIntegerが送られてきたとき
             if data.length == MemoryLayout<NSInteger>.size {
                 data.getBytes(&getData, length: data.length)
             }

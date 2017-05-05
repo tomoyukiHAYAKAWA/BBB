@@ -38,13 +38,33 @@
                                 <rect key="frame" x="130" y="509" width="115" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="block_red.png" translatesAutoresizingMaskIntoConstraints="NO" id="ubs-h7-t3N">
+                                <rect key="frame" x="191" y="559" width="80" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="block_green.png" translatesAutoresizingMaskIntoConstraints="NO" id="zsT-rE-Pef">
+                                <rect key="frame" x="279" y="559" width="80" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="block_yellow.png" translatesAutoresizingMaskIntoConstraints="NO" id="aFs-Yd-MAy">
+                                <rect key="frame" x="103" y="559" width="80" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="block_blue.png" translatesAutoresizingMaskIntoConstraints="NO" id="1YT-Ax-qmR">
+                                <rect key="frame" x="16" y="559" width="80" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="ballImage" destination="B7p-g8-ujt" id="hdF-Je-VMx"/>
+                        <outlet property="blueBlockImage" destination="1YT-Ax-qmR" id="Pa2-rw-q8p"/>
+                        <outlet property="greenBlockImage" destination="zsT-rE-Pef" id="Q0h-cj-pjm"/>
                         <outlet property="p1pad" destination="j73-1J-daN" id="KDR-w5-CyU"/>
+                        <outlet property="redBlockImage" destination="ubs-h7-t3N" id="inL-al-6zc"/>
                         <outlet property="showBrowser" destination="OMr-vd-zVG" id="oZm-jS-3vc"/>
+                        <outlet property="yellowBlockImage" destination="aFs-Yd-MAy" id="ZVH-3y-oRK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -102,5 +122,9 @@
     </scenes>
     <resources>
         <image name="bar_01.png" width="81" height="21"/>
+        <image name="block_blue.png" width="338" height="68"/>
+        <image name="block_green.png" width="339" height="68"/>
+        <image name="block_red.png" width="339" height="68"/>
+        <image name="block_yellow.png" width="339" height="68"/>
     </resources>
 </document>
