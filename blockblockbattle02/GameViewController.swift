@@ -14,7 +14,6 @@ import MultipeerConnectivity
 class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCSessionDelegate{
 	
 	@IBOutlet weak var p1pad: UIImageView!
-	@IBOutlet weak var p2pad: UIImageView!
 	
 	@IBOutlet weak var showBrowser: UIButton!
 	
@@ -84,27 +83,8 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		case self.peerID:
 			break
 		default:
-			// 送られて来た値を扱えるように変換
-			let box : Double = Double(speedX)
-			var p2SpeedX : Double = box / 100000000000.0
-			//print("送られてきた値 : \(p2SpeedX)")
-			
-			// padの操作
-			var p2PosX = self.p2pad.center.x - (CGFloat(p2SpeedX) * 3.5)
-			// padの位置を修正
-			if p2PosX <= 0 + (self.p2pad.frame.width / 2) {
-				p2SpeedX = 0
-				p2PosX = 0 + (self.p2pad.frame.width / 2)
-			}
-			if p2PosX >= self.screenSize.width - (self.p2pad.frame.width / 2) {
-				p2SpeedX = 0
-				p2PosX = self.screenSize.width - (self.p2pad.frame.width / 2)
-			}
-			// 修正した位置を適用
-			self.p2pad.center.x = p2PosX
 			break
-		}
-		
+        }
 	}
 	
 	// 加速度を使ったバーの操作
@@ -126,17 +106,6 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 			}
 			// 修正した位置を適用
 			self.p1pad.center.x = p1PosX
-			// 相手に加速度の送信
-			let some : Double = self.p1SpeedX * 100000000000.0
-			var sendSpeedX : Int = Int(some)
-			//print(sendSpeedX)
-			let data = NSData(bytes: &sendSpeedX, length: MemoryLayout<NSInteger>.size)
-			// 相手へ送信
-			do {
-				try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
-			} catch {
-				print(error)
-			}
 		}
 		// 加速度の開始
 		playerMotionManager.startAccelerometerUpdates(to: OperationQueue.main, withHandler: handler)
@@ -160,7 +129,16 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 			vecX = vecX * -1
 		}
 		if posY <= 0 {
-			vecY = vecY * -1
+			
+            // 相手へボールの座標の送信
+            var ballPostion = self.ballImage.center
+            let data = NSData(bytes: &ballPostion, length: MemoryLayout<CGPoint>.size)
+            do {
+                try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+            } catch {
+                print(error)
+            }
+            
 		}
 		if posY >= self.screenSize.height {
 			vecY = vecY * -1
@@ -179,21 +157,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 vecY = vecY * -1
             }
         }
-        
-        // プレイヤー2のパッドの当たり判定
-        if ballImage.frame.intersects(p2pad.frame) {
-            // 上からボールが来た時
-            let ballPosY = self.ballImage.frame.minY
-            
-            if ballPosY < self.p2pad.frame.minY {
-                posY -= self.ballImage.frame.height/2
-                vecY = vecY * -1
-            } else if ballPosY > self.p2pad.frame.minY {
-                posY += self.ballImage.frame.height/2
-                vecY = vecY * -1
-            }
-        }
-        
+    
 		// ボールの位置の適用
 		self.ballImage.center = CGPoint(x: posX, y: posY)
 		
@@ -264,10 +228,18 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		DispatchQueue.main.async() {
 			
             let data = NSData(data: data)
-			var getData : NSInteger = 0
+            var getData : NSInteger = 0
+//            var getPoint : CGPoint!
             
-            // 送られてきたデータ
-			data.getBytes(&getData, length: data.length)
+//            if (data.length == MemoryLayout<CGPoint>.size) {
+//                var receivedPoint = UnsafePointer(<CGPoint>(data.bytes).memory)
+//            } else {
+//                // error
+//            }
+//        
+            if data.length == MemoryLayout<NSInteger>.size {
+                data.getBytes(&getData, length: data.length)
+            }
             
             // 相手の準備が完了
             if getData == 19193773 {
@@ -278,7 +250,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 self.startTimer.fire()
             }
             
-			// ラベルの更新
+			// ボールの出現
 			self.barUpdate(speedX: getData, fromPeer: peerID)
 		}
 	}
