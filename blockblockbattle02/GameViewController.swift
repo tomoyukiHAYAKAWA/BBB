@@ -68,7 +68,11 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     var sendBallFlag : Bool = false
     var sendVecFlag : Bool = false
     
+    // 自分のライフ
     var lifeCount : Int = 4
+    
+    // 相手のライフ
+    var enemyLifeCount : Int = 4
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,7 +98,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		playerMotionManager.accelerometerUpdateInterval = 0.02
 		
         screenUnder = blueBlockImage.frame.maxY
-        print("画面下 : \(screenUnder)")
+//        print("画面下 : \(screenUnder)")
 
     }
     
@@ -174,7 +178,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 			vecX = vecX * -1
 		}
         // ボールが画面上部へ行った時
-		if posY <= 0 {
+		if posY < 0 {
 			
             if sendBallFlag == false && sendVecFlag == false {
                 sendBallFlag = true
@@ -206,11 +210,18 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
         
         // バー青との当たり判定
         if ballImage.frame.intersects(blueBlockImage.frame) {
+            // 自分の残機を減らす
             lifeCount -= 1
+            // ラベルの更新
             player1LifeLabel.text = String(lifeCount)
+            // 相手へ残機の送信
+            self.sendLife()
+            // ブロックを消す
             blueBlockImage.isHidden = true
             blueBlockImage.center = CGPoint(x: blueBlockImage.center.x, y: 2000)
+            // ボールの位置の修正
             posY -= self.ballImage.frame.height/2
+            // ベクトルの反転
             vecY = vecY * -1
         }
         
@@ -218,6 +229,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
         if ballImage.frame.intersects(greenBlockImage.frame) {
             lifeCount -= 1
             player1LifeLabel.text = String(lifeCount)
+            self.sendLife()
             greenBlockImage.isHidden = true
             greenBlockImage.center = CGPoint(x: greenBlockImage.center.x, y: 2000)
             posY -= self.ballImage.frame.height/2
@@ -228,6 +240,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
         if ballImage.frame.intersects(redBlockImage.frame) {
             lifeCount -= 1
             player1LifeLabel.text = String(lifeCount)
+            self.sendLife()
             redBlockImage.isHidden = true
             redBlockImage.center = CGPoint(x: redBlockImage.center.x, y: 2000)
             posY -= self.ballImage.frame.height/2
@@ -238,6 +251,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
         if ballImage.frame.intersects(yellowBlockImage.frame) {
             lifeCount -= 1
             player1LifeLabel.text = String(lifeCount)
+            self.sendLife()
             yellowBlockImage.isHidden = true
             yellowBlockImage.center = CGPoint(x: yellowBlockImage.center.x, y: 2000)
             posY -= self.ballImage.frame.height/2
@@ -248,6 +262,25 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		self.ballImage.center = CGPoint(x: posX, y: posY)
 		
 	}
+    
+    // 残機の送信
+    func sendLife() {
+        // 残機のパス
+        var life = 0
+        let data = NSData(bytes: &life, length: MemoryLayout<NSInteger>.size)
+        // 相手へ送信
+        do {
+            try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+        } catch {
+            print(error)
+        }
+        // 自分の残機が0になったら
+        if lifeCount == 0 {
+            player1LifeLabel.text = String("Lose")
+            player2LifeLabel.text = String("Win")
+            viewUpdateTimer.invalidate()
+        }
+    }
     
     // ボールの位置、ベクトルの送信
     func sendBallData() {
@@ -286,7 +319,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	
 	// ゲーム開始
 	func gameStart() {
-		
+        // プレイヤー1からボールがスタート
         if player1Flag == true {
             ballImage.isHidden = false
         } else {
@@ -368,6 +401,17 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 
                 self.vecUpdate(getVecX: getData)
             
+            } else if getData == 0 { // ブロックの破壊が送られてきたとき
+                // 敵の残機の減少
+                self.enemyLifeCount -= 1
+                // ラベルの更新
+                self.player2LifeLabel.text  = String(self.enemyLifeCount)
+                if self.enemyLifeCount == 0 {
+                    self.player1LifeLabel.text = String("Win")
+                    self.player2LifeLabel.text = String("Lose")
+                    self.viewUpdateTimer.invalidate()
+                }
+                
             } else { // ボールの座標の場合
                 // ボールの出現
                 self.ballUpdate(postionX: getData, fromPeer: peerID)

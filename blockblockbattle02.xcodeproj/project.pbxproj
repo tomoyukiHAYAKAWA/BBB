@@ -16,6 +16,7 @@
 		8EEE44E81EAC886800B4C03A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EEE44E61EAC886800B4C03A /* LaunchScreen.storyboard */; };
 		8EEE44F31EAC886900B4C03A /* blockblockbattle02Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEE44F21EAC886900B4C03A /* blockblockbattle02Tests.swift */; };
 		8EEE44FE1EAC886900B4C03A /* blockblockbattle02UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEE44FD1EAC886900B4C03A /* blockblockbattle02UITests.swift */; };
+		CCAE70AD1EBFCFB400E15752 /* PixelMplus12-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CCAE70AC1EBF617F00E15752 /* PixelMplus12-Regular.ttf */; };
 		CCB7EFA51EBCB5D2001E715A /* block_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB7EFA11EBCB5D2001E715A /* block_blue.png */; };
 		CCB7EFA61EBCB5D2001E715A /* block_green.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB7EFA21EBCB5D2001E715A /* block_green.png */; };
 		CCB7EFA71EBCB5D2001E715A /* block_red.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB7EFA31EBCB5D2001E715A /* block_red.png */; };
@@ -255,6 +256,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCAE70AD1EBFCFB400E15752 /* PixelMplus12-Regular.ttf in Resources */,
 				8EEE44E81EAC886800B4C03A /* LaunchScreen.storyboard in Resources */,
 				CCB7EFA81EBCB5D2001E715A /* block_yellow.png in Resources */,
 				CCB7EFA71EBCB5D2001E715A /* block_red.png in Resources */,
