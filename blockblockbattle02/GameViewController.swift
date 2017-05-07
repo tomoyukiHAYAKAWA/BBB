@@ -20,15 +20,20 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     @IBOutlet weak var yellowBlockImage: UIImageView!
     @IBOutlet weak var redBlockImage: UIImageView!
     @IBOutlet weak var greenBlockImage: UIImageView!
-   
     
-	
+    @IBOutlet weak var player1LifeLabel: UILabel!
+    @IBOutlet weak var player2LifeLabel: UILabel!
+    
+   
 	// 加速度の宣言
 	var playerMotionManager : CMMotionManager!
 	// 自分の加速度
 	var p1SpeedX : Double = 0.0
 	// パッドの位置(X座標)
 	var p1PosX : CGPoint!
+    
+    // 送られてきたボールの位置
+    var firstBallPosX : CGFloat!
 	
 	// multipeerConnectivity関連
 	let serviceType = "LCOC-Chat"
@@ -38,20 +43,33 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	var peerID: MCPeerID!
 	
 	// ボールの速度
-	var vecX : CGFloat = 7.0
-	var vecY : CGFloat = -7.0
-	
+	var vecX : CGFloat = 8
+	var vecY : CGFloat = -8
+    // 開始のタイマー
     var startTimer : Timer!
+    
+    // ビューのアップデートタイマー
+    var viewUpdateTimer : Timer!
     
 	// ボールイメージ
 	@IBOutlet weak var ballImage: UIImageView!
 	
 	// 画面サイズの取得
 	let screenSize = UIScreen.main.bounds.size
+    var screenUnder : CGFloat!
     
     // カウント秒
     var second : Int = 0
-	
+    
+    // プレイヤー1フラッグ
+    var player1Flag : Bool = false
+    
+    // 送信フラッグ
+    var sendBallFlag : Bool = false
+    var sendVecFlag : Bool = false
+    
+    var lifeCount : Int = 4
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,25 +88,46 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		self.assistant = MCAdvertiserAssistant(serviceType:serviceType,
 		                                       discoveryInfo:nil, session:self.session)
 		self.assistant.start()
-		
-		// 描画の更新
-        
-        
-		Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(self.viewUpdate), userInfo: nil, repeats: true)
         
 		// MotionManagerを生成
 		playerMotionManager = CMMotionManager()
 		playerMotionManager.accelerometerUpdateInterval = 0.02
-		// 加速度による操作の開始
 		
+        screenUnder = blueBlockImage.frame.maxY
+        print("画面下 : \(screenUnder)")
+
+    }
+    
+    // 送られてきたベクトルの向き
+    func vecUpdate(getVecX : Int) {
+        if getVecX == -8 {
+            vecX = 8
+            vecY = 8
+        } else if getVecX == 8 {
+            vecX = -8
+            vecY = 8
+        }
+//        print("vecX : \(vecX)")
     }
 
-	func barUpdate(speedX : Int, fromPeer peerID: MCPeerID) {
+    // 送られてきたボールの位置
+    func ballUpdate(postionX : Int, fromPeer peerID: MCPeerID) {
 		
 		switch peerID {
 		case self.peerID:
 			break
 		default:
+            let box = CGFloat(postionX)
+            sendBallFlag = false
+            sendVecFlag = false
+            firstBallPosX = box/10000.0
+//            print("firstBallPos: \(firstBallPosX)")
+            // 送られてきた座標にボールを適用
+            self.ballImage.center.x = abs(firstBallPosX-screenSize.width)
+            self.ballImage.center.y = 0.0
+            //print("\(self.ballImage.center.x) \(self.ballImage.center.y)")
+            // ボールの表示
+            ballImage.isHidden = false
 			break
         }
 	}
@@ -137,20 +176,17 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
         // ボールが画面上部へ行った時
 		if posY <= 0 {
 			
-            // 相手へボールの座標の送信
-            var ballPostion = self.ballImage.center
-            let data = NSData(bytes: &ballPostion, length: MemoryLayout<CGPoint>.size)
-            do {
-                try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
-            } catch {
-                print(error)
+            if sendBallFlag == false && sendVecFlag == false {
+                sendBallFlag = true
+                sendVecFlag = true
+                self.sendBallData()
+                // ボールの位置を固定
+                posX = self.ballImage.center.x
+                posY = -10
             }
             
-            //ボールを見えなくする
-            ballImage.isHidden = true
-            
 		}
-		if posY >= self.screenSize.height {
+		if posY >= screenUnder {
 			vecY = vecY * -1
 		}
         
@@ -167,12 +203,77 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 vecY = vecY * -1
             }
         }
+        
+        // バー青との当たり判定
+        if ballImage.frame.intersects(blueBlockImage.frame) {
+            lifeCount -= 1
+            player1LifeLabel.text = String(lifeCount)
+            blueBlockImage.isHidden = true
+            blueBlockImage.center = CGPoint(x: blueBlockImage.center.x, y: 2000)
+            posY -= self.ballImage.frame.height/2
+            vecY = vecY * -1
+        }
+        
+        // バー緑との当たり判定
+        if ballImage.frame.intersects(greenBlockImage.frame) {
+            lifeCount -= 1
+            player1LifeLabel.text = String(lifeCount)
+            greenBlockImage.isHidden = true
+            greenBlockImage.center = CGPoint(x: greenBlockImage.center.x, y: 2000)
+            posY -= self.ballImage.frame.height/2
+            vecY = vecY * -1
+        }
+        
+        // バー赤との当たり判定
+        if ballImage.frame.intersects(redBlockImage.frame) {
+            lifeCount -= 1
+            player1LifeLabel.text = String(lifeCount)
+            redBlockImage.isHidden = true
+            redBlockImage.center = CGPoint(x: redBlockImage.center.x, y: 2000)
+            posY -= self.ballImage.frame.height/2
+            vecY = vecY * -1
+        }
+        
+        // バー黄色との当たり判定
+        if ballImage.frame.intersects(yellowBlockImage.frame) {
+            lifeCount -= 1
+            player1LifeLabel.text = String(lifeCount)
+            yellowBlockImage.isHidden = true
+            yellowBlockImage.center = CGPoint(x: yellowBlockImage.center.x, y: 2000)
+            posY -= self.ballImage.frame.height/2
+            vecY = vecY * -1
+        }
     
 		// ボールの位置の適用
 		self.ballImage.center = CGPoint(x: posX, y: posY)
 		
 	}
     
+    // ボールの位置、ベクトルの送信
+    func sendBallData() {
+        // 相手へボールの座標の送信
+        var ballPostion = self.ballImage.center.x
+        ballPostion = ballPostion * 10000
+        var sendBallPostionX : Int = Int(ballPostion)
+        var data = NSData(bytes: &sendBallPostionX, length: MemoryLayout<NSInteger>.size)
+        do {
+            try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+        } catch {
+            print(error)
+        }
+        // 相手へボールのベクトルの送信
+        var sendVecX = Int(vecX)
+        data = NSData(bytes: &sendVecX, length: MemoryLayout<NSInteger>.size)
+        do {
+            try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+        } catch {
+            print(error)
+        }
+        // ボールを見えなくする
+        ballImage.isHidden = true
+    }
+    
+    // ゲーム開始のカウントダウン
     func startCount() {
         print("timer start")
         showBrowser.isHidden = true
@@ -186,9 +287,15 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	// ゲーム開始
 	func gameStart() {
 		
-		ballImage.isHidden = false
+        if player1Flag == true {
+            ballImage.isHidden = false
+        } else {
+            ballImage.isHidden = true
+        }
 		// ボールの最初の位置
 		ballImage.center = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
+        viewUpdateTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(self.viewUpdate), userInfo: nil, repeats: true)
+
 		// 加速度の取得と送信の開始
 		startAccelerometer()
 		
@@ -208,11 +315,16 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		_ browserViewController: MCBrowserViewController)  {
 		// Called when the browser view controller is dismissed (ie the Done
 		// button was tapped)
+        
         // ブラウザーボタンの非表示
 		showBrowser.isHidden = true
+        
         // 準備完了のパスワード
         var reday = 19193773
         let data = NSData(bytes: &reday, length: MemoryLayout<NSInteger>.size)
+        
+        // 自分が対戦を申し込んだ側(player1)
+        player1Flag = true
         
         // 相手へ送信
         do {
@@ -240,14 +352,6 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             // 送られてきたデータ
             let data = NSData(data: data)
             var getData : NSInteger = 0
-            var getPoint : CGPoint!
-            
-            // CGPointが送られてきたとき
-            if (data.length == MemoryLayout<CGPoint>.size) {
-                //var receivedPoint = UnsafePointer<CGPoint>(data.bytes).memory
-                data.getBytes(&getPoint, length: data.length)
-                print("\(getPoint.x), \(getPoint.y)")
-            }
         
             // NSIntegerが送られてきたとき
             if data.length == MemoryLayout<NSInteger>.size {
@@ -256,15 +360,18 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             
             // 相手の準備が完了
             if getData == 19193773 {
-                self.vecX = -7.0
-                self.vecY = 7.0
                 
                 self.startTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.startCount), userInfo: nil, repeats: true)
                 self.startTimer.fire()
-            }
+        
+            } else if getData == -8 || getData == 8 { // ベクトルが送られてきた場合
+
+                self.vecUpdate(getVecX: getData)
             
-			// ボールの出現
-			self.barUpdate(speedX: getData, fromPeer: peerID)
+            } else { // ボールの座標の場合
+                // ボールの出現
+                self.ballUpdate(postionX: getData, fromPeer: peerID)
+            }
 		}
 	}
 	
