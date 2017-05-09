@@ -109,21 +109,7 @@
 		8EEE44D11EAC886800B4C03A = {
 			isa = PBXGroup;
 			children = (
-				CCAE70AC1EBF617F00E15752 /* PixelMplus12-Regular.ttf */,
-				CC3647FC1EC1B327007E88B3 /* taisenBtn.png */,
-				CC3647F61EC1AFB7007E88B3 /* asobikataBtn.png */,
-				CC3647F71EC1AFB7007E88B3 /* sensekiBtn.png */,
-				CC3647F81EC1AFB7007E88B3 /* startBtn.png */,
-				CC3647F41EC1A329007E88B3 /* topImage.png */,
-				CC3647EC1EC19B8D007E88B3 /* 1.png */,
-				CC3647ED1EC19B8D007E88B3 /* 2.png */,
-				CC3647EE1EC19B8D007E88B3 /* 3.png */,
-				CC3647EF1EC19B8D007E88B3 /* go.png */,
-				8E1D5D991EAE442D0022A49A /* bar_01.png */,
-				CCB7EFA11EBCB5D2001E715A /* block_blue.png */,
-				CCB7EFA21EBCB5D2001E715A /* block_green.png */,
-				CCB7EFA31EBCB5D2001E715A /* block_red.png */,
-				CCB7EFA41EBCB5D2001E715A /* block_yellow.png */,
+				CC6924F21EC234B1002EC23F /* image */,
 				8EEE44DC1EAC886800B4C03A /* blockblockbattle02 */,
 				8EEE44F11EAC886900B4C03A /* blockblockbattle02Tests */,
 				8EEE44FC1EAC886900B4C03A /* blockblockbattle02UITests */,
@@ -171,6 +157,28 @@
 				8EEE44FF1EAC886900B4C03A /* Info.plist */,
 			);
 			path = blockblockbattle02UITests;
+			sourceTree = "<group>";
+		};
+		CC6924F21EC234B1002EC23F /* image */ = {
+			isa = PBXGroup;
+			children = (
+				CCAE70AC1EBF617F00E15752 /* PixelMplus12-Regular.ttf */,
+				CC3647FC1EC1B327007E88B3 /* taisenBtn.png */,
+				CC3647F61EC1AFB7007E88B3 /* asobikataBtn.png */,
+				CC3647F71EC1AFB7007E88B3 /* sensekiBtn.png */,
+				CC3647F81EC1AFB7007E88B3 /* startBtn.png */,
+				CC3647F41EC1A329007E88B3 /* topImage.png */,
+				CC3647EC1EC19B8D007E88B3 /* 1.png */,
+				CC3647ED1EC19B8D007E88B3 /* 2.png */,
+				CC3647EE1EC19B8D007E88B3 /* 3.png */,
+				CC3647EF1EC19B8D007E88B3 /* go.png */,
+				8E1D5D991EAE442D0022A49A /* bar_01.png */,
+				CCB7EFA11EBCB5D2001E715A /* block_blue.png */,
+				CCB7EFA21EBCB5D2001E715A /* block_green.png */,
+				CCB7EFA31EBCB5D2001E715A /* block_red.png */,
+				CCB7EFA41EBCB5D2001E715A /* block_yellow.png */,
+			);
+			name = image;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
