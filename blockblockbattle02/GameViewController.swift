@@ -21,10 +21,15 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     @IBOutlet weak var redBlockImage: UIImageView!
     @IBOutlet weak var greenBlockImage: UIImageView!
     
-    @IBOutlet weak var player1LifeLabel: UILabel!
-    @IBOutlet weak var player2LifeLabel: UILabel!
+    @IBOutlet weak var p2blueBlockImage: UIImageView!
+    @IBOutlet weak var p2yellowBlockImage: UIImageView!
+    @IBOutlet weak var p2redBlockImage: UIImageView!
+    @IBOutlet weak var p2greenBlockImage: UIImageView!
     
-   
+    @IBOutlet weak var countImage: UIImageView!
+    
+    @IBOutlet weak var topImage: UIImageView!
+    
 	// 加速度の宣言
 	var playerMotionManager : CMMotionManager!
 	// 自分の加速度
@@ -45,6 +50,8 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	// ボールの速度
 	var vecX : CGFloat = 8
 	var vecY : CGFloat = -8
+    
+    
     // 開始のタイマー
     var startTimer : Timer!
     
@@ -56,10 +63,15 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	
 	// 画面サイズの取得
 	let screenSize = UIScreen.main.bounds.size
-    var screenUnder : CGFloat!
+    var screenTop : CGFloat!
     
     // カウント秒
-    var second : Int = 0
+    var second : Int = 5
+    
+    // プレイヤー1ライフ
+    var player1Life : Int = 4
+    // プレイヤー2ライフ
+    var player2Life : Int = 4
     
     // プレイヤー1フラッグ
     var player1Flag : Bool = false
@@ -68,17 +80,19 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     var sendBallFlag : Bool = false
     var sendVecFlag : Bool = false
     
-    // 自分のライフ
-    var lifeCount : Int = 4
-    
-    // 相手のライフ
-    var enemyLifeCount : Int = 4
+    // 戦績用変数
+//    var win : Int!
+//    var lose : Int!
+//    var dBlock : Int!
+//    var bBlock : Int!
+//    var ballBlock : Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
 		// 非表示
 		ballImage.isHidden = true
+        countImage.isHidden = true
 		
 		// multipeerConnectivity関連
 		self.peerID = MCPeerID(displayName: UIDevice.current.name)
@@ -97,7 +111,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		playerMotionManager = CMMotionManager()
 		playerMotionManager.accelerometerUpdateInterval = 0.02
 		
-        screenUnder = blueBlockImage.frame.maxY
+        screenTop = topImage.frame.maxY
 //        print("画面下 : \(screenUnder)")
 
     }
@@ -178,7 +192,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 			vecX = vecX * -1
 		}
         // ボールが画面上部へ行った時
-		if posY < 0 {
+		if posY < screenTop {
 			
             if sendBallFlag == false && sendVecFlag == false {
                 sendBallFlag = true
@@ -190,7 +204,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             }
             
 		}
-		if posY >= screenUnder {
+		if posY >= 0 {
 			vecY = vecY * -1
 		}
         
@@ -206,56 +220,149 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 posY += self.ballImage.frame.height/2
                 vecY = vecY * -1
             }
+            
         }
         
         // バー青との当たり判定
         if ballImage.frame.intersects(blueBlockImage.frame) {
-            // 自分の残機を減らす
-            lifeCount -= 1
             // ラベルの更新
-            player1LifeLabel.text = String(lifeCount)
             // 相手へ残機の送信
             self.sendLife()
+            
+            let ballPosY = self.ballImage.frame.minY
+            // ボールが上から来た時
+            if ballPosY < self.blueBlockImage.frame.minY {
+                posY -= self.ballImage.frame.height/2
+                vecY = vecY * -1
+                // ボールが下から来た時
+            } else if ballPosY > self.blueBlockImage.frame.minY {
+                posY += self.ballImage.frame.height/2
+                vecY = vecY * -1
+            }
+            
+            player1Life -= 1
+            // ライフが0になった時
+            if player1Life == 0 {
+                self.viewUpdateTimer.invalidate()
+            }
+            var life = 0
+            let data = NSData(bytes: &life, length: MemoryLayout<NSInteger>.size)
+            // 相手へ送信
+            do {
+                try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+            } catch {
+                print(error)
+            }
+            
             // ブロックを消す
             blueBlockImage.isHidden = true
             blueBlockImage.center = CGPoint(x: blueBlockImage.center.x, y: 2000)
-            // ボールの位置の修正
-            posY -= self.ballImage.frame.height/2
-            // ベクトルの反転
-            vecY = vecY * -1
+
         }
         
         // バー緑との当たり判定
         if ballImage.frame.intersects(greenBlockImage.frame) {
-            lifeCount -= 1
-            player1LifeLabel.text = String(lifeCount)
             self.sendLife()
+            
+            let ballPosY = self.ballImage.frame.minY
+            // ボールが上から来た時
+            if ballPosY < self.greenBlockImage.frame.minY {
+                posY -= self.ballImage.frame.height/2
+                vecY = vecY * -1
+                // ボールが下から来た時
+            } else if ballPosY > self.greenBlockImage.frame.minY {
+                posY += self.ballImage.frame.height/2
+                vecY = vecY * -1
+            }
+            
+            player1Life -= 1
+            // ライフが0になった時
+            if player1Life == 0 {
+                self.viewUpdateTimer.invalidate()
+            }
+            
+            var life = 1
+            let data = NSData(bytes: &life, length: MemoryLayout<NSInteger>.size)
+            // 相手へ送信
+            do {
+                try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+            } catch {
+                print(error)
+            }
+            
             greenBlockImage.isHidden = true
             greenBlockImage.center = CGPoint(x: greenBlockImage.center.x, y: 2000)
-            posY -= self.ballImage.frame.height/2
-            vecY = vecY * -1
+            
         }
         
         // バー赤との当たり判定
         if ballImage.frame.intersects(redBlockImage.frame) {
-            lifeCount -= 1
-            player1LifeLabel.text = String(lifeCount)
             self.sendLife()
+            
+            let ballPosY = self.ballImage.frame.minY
+            // ボールが上から来た時
+            if ballPosY < self.redBlockImage.frame.minY {
+                posY -= self.ballImage.frame.height/2
+                vecY = vecY * -1
+                // ボールが下から来た時
+            } else if ballPosY > self.redBlockImage.frame.minY {
+                posY += self.ballImage.frame.height/2
+                vecY = vecY * -1
+            }
+            
+            player1Life -= 1
+            // ライフが0になった時
+            if player1Life == 0 {
+                self.viewUpdateTimer.invalidate()
+            }
+            
+            var life = 2
+            let data = NSData(bytes: &life, length: MemoryLayout<NSInteger>.size)
+            // 相手へ送信
+            do {
+                try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+            } catch {
+                print(error)
+            }
+            
             redBlockImage.isHidden = true
             redBlockImage.center = CGPoint(x: redBlockImage.center.x, y: 2000)
-            posY -= self.ballImage.frame.height/2
-            vecY = vecY * -1
+            
         }
         
         // バー黄色との当たり判定
         if ballImage.frame.intersects(yellowBlockImage.frame) {
-            lifeCount -= 1
-            player1LifeLabel.text = String(lifeCount)
             self.sendLife()
+            
+            let ballPosY = self.ballImage.frame.minY
+            // ボールが上から来た時
+            if ballPosY < self.yellowBlockImage.frame.minY {
+                posY -= self.ballImage.frame.height/2
+                vecY = vecY * -1
+                // ボールが下から来た時
+            } else if ballPosY > self.yellowBlockImage.frame.minY {
+                posY += self.ballImage.frame.height/2
+                vecY = vecY * -1
+            }
+            
+            player1Life -= 1
+            // ライフが0になった時
+            if player1Life == 0 {
+                self.viewUpdateTimer.invalidate()
+            }
+            
+            var life = 3
+            let data = NSData(bytes: &life, length: MemoryLayout<NSInteger>.size)
+            // 相手へ送信
+            do {
+                try self.session.send(data as Data, toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
+            } catch {
+                print(error)
+            }
+            
             yellowBlockImage.isHidden = true
             yellowBlockImage.center = CGPoint(x: yellowBlockImage.center.x, y: 2000)
-            posY -= self.ballImage.frame.height/2
-            vecY = vecY * -1
+            
         }
     
 		// ボールの位置の適用
@@ -275,11 +382,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             print(error)
         }
         // 自分の残機が0になったら
-        if lifeCount == 0 {
-            player1LifeLabel.text = String("Lose")
-            player2LifeLabel.text = String("Win")
-            viewUpdateTimer.invalidate()
-        }
+        viewUpdateTimer.invalidate()
     }
     
     // ボールの位置、ベクトルの送信
@@ -309,11 +412,36 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     // ゲーム開始のカウントダウン
     func startCount() {
         print("timer start")
+        
         showBrowser.isHidden = true
-        second += 1
-        if second >= 4 {
+        switch second {
+        case 5:
+            let count3 = UIImage(named:"3")
+            countImage.image = count3
+            break
+            
+        case 4:
+            let count2 = UIImage(named:"2")
+            countImage.image = count2
+            break
+
+        case 3:
+            let count1 = UIImage(named:"1")
+            countImage.image = count1
+            break
+            
+        case 2:
+            let countgo = UIImage(named:"go")
+            countImage.image = countgo
+            break
+            
+        case 1:
             startTimer.invalidate()
             gameStart()
+            countImage.isHidden = true
+            break
+        default:
+            break
         }
     }
 	
@@ -402,13 +530,34 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 self.vecUpdate(getVecX: getData)
             
             } else if getData == 0 { // ブロックの破壊が送られてきたとき
-                // 敵の残機の減少
-                self.enemyLifeCount -= 1
-                // ラベルの更新
-                self.player2LifeLabel.text  = String(self.enemyLifeCount)
-                if self.enemyLifeCount == 0 {
-                    self.player1LifeLabel.text = String("Win")
-                    self.player2LifeLabel.text = String("Lose")
+                
+                self.player2Life -= 1
+                self.p2blueBlockImage.isHidden = true
+                if self.player2Life == 0 {
+                    self.viewUpdateTimer.invalidate()
+                }
+            
+            } else if getData == 1 {
+              
+                self.player2Life -= 1
+                self.p2greenBlockImage.isHidden = true
+                if self.player2Life == 0 {
+                    self.viewUpdateTimer.invalidate()
+                }
+                
+            } else if getData == 2 {
+              
+                self.player2Life -= 1
+                self.p2redBlockImage.isHidden = true
+                if self.player2Life == 0 {
+                    self.viewUpdateTimer.invalidate()
+                }
+                
+            } else if getData == 3 {
+              
+                self.player2Life -= 1
+                self.p2yellowBlockImage.isHidden = true
+                if self.player2Life == 0 {
                     self.viewUpdateTimer.invalidate()
                 }
                 
