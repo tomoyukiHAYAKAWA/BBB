@@ -10,14 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var howToImage: UIImageView!
-    
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
-        
-        howToImage.isHidden = true
         
 	}
 
@@ -25,15 +21,6 @@ class ViewController: UIViewController {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
-    
-    @IBAction func onBtn(_ sender: Any) {
-        howToImage.isHidden = false
-    }
-    
-    @IBAction func offBtn(_ sender: Any) {
-        howToImage.isHidden = true
-    }
-    
 
 }
 

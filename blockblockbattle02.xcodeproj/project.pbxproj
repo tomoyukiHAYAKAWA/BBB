@@ -30,6 +30,12 @@
 		CCB7EFA61EBCB5D2001E715A /* block_green.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB7EFA21EBCB5D2001E715A /* block_green.png */; };
 		CCB7EFA71EBCB5D2001E715A /* block_red.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB7EFA31EBCB5D2001E715A /* block_red.png */; };
 		CCB7EFA81EBCB5D2001E715A /* block_yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = CCB7EFA41EBCB5D2001E715A /* block_yellow.png */; };
+		CCC9D2811EC7F67000B2B7EC /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC9D2801EC7F67000B2B7EC /* backBtn.png */; };
+		CCC9D2851EC83EB100B2B7EC /* winImage.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC9D2841EC83EB100B2B7EC /* winImage.png */; };
+		CCC9D2871EC8414D00B2B7EC /* howToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC9D2861EC8414D00B2B7EC /* howToViewController.swift */; };
+		CCC9D2891EC847B800B2B7EC /* howToImage_01.png in Resources */ = {isa = PBXBuildFile; fileRef = CCC9D2881EC847B800B2B7EC /* howToImage_01.png */; };
+		CCEDDC971EC84A7A00DA34CD /* howToImage_02.png in Resources */ = {isa = PBXBuildFile; fileRef = CCEDDC951EC84A7A00DA34CD /* howToImage_02.png */; };
+		CCEDDC981EC84A7A00DA34CD /* howToImage_03.png in Resources */ = {isa = PBXBuildFile; fileRef = CCEDDC961EC84A7A00DA34CD /* howToImage_03.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +85,12 @@
 		CCB7EFA21EBCB5D2001E715A /* block_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = block_green.png; sourceTree = "<group>"; };
 		CCB7EFA31EBCB5D2001E715A /* block_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = block_red.png; sourceTree = "<group>"; };
 		CCB7EFA41EBCB5D2001E715A /* block_yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = block_yellow.png; sourceTree = "<group>"; };
+		CCC9D2801EC7F67000B2B7EC /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
+		CCC9D2841EC83EB100B2B7EC /* winImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = winImage.png; sourceTree = "<group>"; };
+		CCC9D2861EC8414D00B2B7EC /* howToViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = howToViewController.swift; path = ../howToViewController.swift; sourceTree = "<group>"; };
+		CCC9D2881EC847B800B2B7EC /* howToImage_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = howToImage_01.png; sourceTree = "<group>"; };
+		CCEDDC951EC84A7A00DA34CD /* howToImage_02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = howToImage_02.png; sourceTree = "<group>"; };
+		CCEDDC961EC84A7A00DA34CD /* howToImage_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = howToImage_03.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +144,7 @@
 			children = (
 				8EEE44DD1EAC886800B4C03A /* AppDelegate.swift */,
 				8EEE44DF1EAC886800B4C03A /* ViewController.swift */,
+				CCC9D2861EC8414D00B2B7EC /* howToViewController.swift */,
 				8E1D5D9B1EAE454F0022A49A /* GameViewController.swift */,
 				8EEE44E11EAC886800B4C03A /* Main.storyboard */,
 				8EEE44E41EAC886800B4C03A /* Assets.xcassets */,
@@ -163,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				CCAE70AC1EBF617F00E15752 /* PixelMplus12-Regular.ttf */,
+				CCC9D2841EC83EB100B2B7EC /* winImage.png */,
 				CC3647FC1EC1B327007E88B3 /* taisenBtn.png */,
 				CC3647F61EC1AFB7007E88B3 /* asobikataBtn.png */,
 				CC3647F71EC1AFB7007E88B3 /* sensekiBtn.png */,
@@ -172,11 +186,15 @@
 				CC3647ED1EC19B8D007E88B3 /* 2.png */,
 				CC3647EE1EC19B8D007E88B3 /* 3.png */,
 				CC3647EF1EC19B8D007E88B3 /* go.png */,
+				CCC9D2801EC7F67000B2B7EC /* backBtn.png */,
 				8E1D5D991EAE442D0022A49A /* bar_01.png */,
 				CCB7EFA11EBCB5D2001E715A /* block_blue.png */,
 				CCB7EFA21EBCB5D2001E715A /* block_green.png */,
 				CCB7EFA31EBCB5D2001E715A /* block_red.png */,
 				CCB7EFA41EBCB5D2001E715A /* block_yellow.png */,
+				CCC9D2881EC847B800B2B7EC /* howToImage_01.png */,
+				CCEDDC951EC84A7A00DA34CD /* howToImage_02.png */,
+				CCEDDC961EC84A7A00DA34CD /* howToImage_03.png */,
 			);
 			name = image;
 			sourceTree = "<group>";
@@ -295,6 +313,7 @@
 				CC3647F11EC19B8D007E88B3 /* 2.png in Resources */,
 				CCAE70AD1EBFCFB400E15752 /* PixelMplus12-Regular.ttf in Resources */,
 				CC3647FB1EC1AFB7007E88B3 /* startBtn.png in Resources */,
+				CCC9D2851EC83EB100B2B7EC /* winImage.png in Resources */,
 				CC3647F51EC1A329007E88B3 /* topImage.png in Resources */,
 				CC3647F91EC1AFB7007E88B3 /* asobikataBtn.png in Resources */,
 				8EEE44E81EAC886800B4C03A /* LaunchScreen.storyboard in Resources */,
@@ -303,8 +322,12 @@
 				CCB7EFA81EBCB5D2001E715A /* block_yellow.png in Resources */,
 				CCB7EFA71EBCB5D2001E715A /* block_red.png in Resources */,
 				CCB7EFA61EBCB5D2001E715A /* block_green.png in Resources */,
+				CCEDDC971EC84A7A00DA34CD /* howToImage_02.png in Resources */,
 				CC3647FD1EC1B327007E88B3 /* taisenBtn.png in Resources */,
+				CCEDDC981EC84A7A00DA34CD /* howToImage_03.png in Resources */,
+				CCC9D2891EC847B800B2B7EC /* howToImage_01.png in Resources */,
 				CCB7EFA51EBCB5D2001E715A /* block_blue.png in Resources */,
+				CCC9D2811EC7F67000B2B7EC /* backBtn.png in Resources */,
 				8EEE44E51EAC886800B4C03A /* Assets.xcassets in Resources */,
 				8E1D5D9A1EAE442D0022A49A /* bar_01.png in Resources */,
 				8EEE44E31EAC886800B4C03A /* Main.storyboard in Resources */,
@@ -333,6 +356,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCC9D2871EC8414D00B2B7EC /* howToViewController.swift in Sources */,
 				8EEE44E01EAC886800B4C03A /* ViewController.swift in Sources */,
 				8E1D5D9C1EAE454F0022A49A /* GameViewController.swift in Sources */,
 				8EEE44DE1EAC886800B4C03A /* AppDelegate.swift in Sources */,
