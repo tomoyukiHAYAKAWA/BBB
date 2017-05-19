@@ -31,6 +31,8 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     
     @IBOutlet weak var topImage: UIImageView!
     
+    @IBOutlet weak var resultLabel: UILabel!
+    
 	// 加速度の宣言
 	var playerMotionManager : CMMotionManager!
 	// 自分の加速度
@@ -49,8 +51,8 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 	var peerID: MCPeerID!
 	
 	// ボールの速度
-	var vecX : CGFloat = 8
-	var vecY : CGFloat = -8
+	var vecX : CGFloat = 8.0
+	var vecY : CGFloat = -8.0
     
     
     // 開始のタイマー
@@ -81,6 +83,8 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     var sendBallFlag : Bool = false
     var sendVecFlag : Bool = false
     
+    let winImage = UIImage(named:"winImage")
+    
     // 戦績用変数
 //    var win : Int!
 //    var lose : Int!
@@ -94,6 +98,7 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 		// 非表示
 		ballImage.isHidden = true
         countImage.isHidden = true
+        resultLabel.isHidden = true
 		
 		// multipeerConnectivity関連
 		self.peerID = MCPeerID(displayName: UIDevice.current.name)
@@ -119,11 +124,11 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
     // 送られてきたベクトルの向き
     func vecUpdate(getVecX : Int) {
         if getVecX == -8 {
-            vecX = 8
-            vecY = 8
+            vecX = 8.0
+            vecY = 8.0
         } else if getVecX == 8 {
-            vecX = -8
-            vecY = 8
+            vecX = -8.0
+            vecY = 8.0
         }
     }
 
@@ -195,17 +200,20 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
 			vecX = vecX * -1
 		}
         // ボールが画面上部へ行った時
-		if posY <= screenTop {
+		if posY <= 0 {
 			
             if sendBallFlag == false && sendVecFlag == false {
                 //print("screenTop:\(screenTop)")
                 //print("posX:\(posY)")
                 sendBallFlag = true
                 sendVecFlag = true
+                
                 self.sendBallData()
+                
                 // ボールの位置を固定
                 posX = self.ballImage.center.x
-                posY = 0.0
+                posY = -20.0
+                
             }
             
 		}
@@ -281,6 +289,9 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             // ライフが0になった時
             if player1Life == 0 {
                 self.viewUpdateTimer.invalidate()
+                resultLabel.isHidden = false
+                resultLabel.text = String("敗北")
+                backBtn.isHidden = false
             }
 
         }
@@ -324,6 +335,9 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             // ライフが0になった時
             if player1Life == 0 {
                 self.viewUpdateTimer.invalidate()
+                resultLabel.isHidden = false
+                resultLabel.text = String("敗北")
+                backBtn.isHidden = false
             }
             
         }
@@ -368,6 +382,9 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             // ライフが0になった時
             if player1Life == 0 {
                 self.viewUpdateTimer.invalidate()
+                resultLabel.isHidden = false
+                resultLabel.text = String("敗北")
+                backBtn.isHidden = false
             }
             
         }
@@ -412,6 +429,9 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
             // ライフが0になった時
             if player1Life == 0 {
                 self.viewUpdateTimer.invalidate()
+                resultLabel.isHidden = false
+                resultLabel.text = String("敗北")
+                backBtn.isHidden = false
             }
 
             
@@ -594,6 +614,12 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 self.p2blueBlockImage.isHidden = true
                 if self.player2Life == 0 {
                     self.viewUpdateTimer.invalidate()
+                    self.resultLabel.isHidden = false
+                    self.resultLabel.text = String("勝利")
+                    self.countImage.isHidden = false
+                    self.countImage.image = self.winImage
+                    self.backBtn.isHidden = false
+                    
                 }
                 break
                     
@@ -603,6 +629,11 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 self.p2yellowBlockImage.isHidden = true
                 if self.player2Life == 0 {
                     self.viewUpdateTimer.invalidate()
+                    self.resultLabel.isHidden = false
+                    self.resultLabel.text = String("勝利")
+                    self.countImage.isHidden = false
+                    self.countImage.image = self.winImage
+                    self.backBtn.isHidden = false
                 }
                 break
                 
@@ -612,6 +643,11 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 self.p2redBlockImage.isHidden = true
                 if self.player2Life == 0 {
                     self.viewUpdateTimer.invalidate()
+                    self.resultLabel.isHidden = false
+                    self.resultLabel.text = String("勝利")
+                    self.countImage.isHidden = false
+                    self.countImage.image = self.winImage
+                    self.backBtn.isHidden = false
                 }
             
                 break
@@ -622,6 +658,11 @@ class GameViewController: UIViewController, MCBrowserViewControllerDelegate, MCS
                 self.p2greenBlockImage.isHidden = true
                 if self.player2Life == 0 {
                     self.viewUpdateTimer.invalidate()
+                    self.resultLabel.isHidden = false
+                    self.resultLabel.text = String("勝利")
+                    self.countImage.isHidden = false
+                    self.countImage.image = self.winImage
+                    self.backBtn.isHidden = false
                 }
                 break
                 

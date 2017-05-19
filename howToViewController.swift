@@ -20,8 +20,7 @@ class howToViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+                
         // Do any additional setup after loading the view.
     }
 
@@ -31,6 +30,7 @@ class howToViewController: UIViewController {
     }
     
     @IBAction func pageControl(sender: UIPageControl) {
+        
         switch sender.currentPage {
         case 0:
             howToImage.image = image01
@@ -47,6 +47,7 @@ class howToViewController: UIViewController {
         default:
             break
         }
+        
     }
 
     /*

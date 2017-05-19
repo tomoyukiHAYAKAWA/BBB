@@ -98,6 +98,13 @@
                                 <rect key="frame" x="279" y="107" width="80" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="勝利" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EOw-Tc-QR2">
+                                <rect key="frame" x="54" y="296" width="270" height="81"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="PixelMplus12-Regular" family="PixelMplus12" pointSize="59"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
@@ -113,6 +120,7 @@
                         <outlet property="p2redBlockImage" destination="NxU-1D-GlN" id="UJ0-m6-CS6"/>
                         <outlet property="p2yellowBlockImage" destination="XeZ-08-AG0" id="AUu-ER-ztD"/>
                         <outlet property="redBlockImage" destination="ubs-h7-t3N" id="inL-al-6zc"/>
+                        <outlet property="resultLabel" destination="EOw-Tc-QR2" id="5JO-kH-g2r"/>
                         <outlet property="showBrowser" destination="OMr-vd-zVG" id="oZm-jS-3vc"/>
                         <outlet property="topImage" destination="JyH-Zg-9w1" id="oET-kc-zeA"/>
                         <outlet property="yellowBlockImage" destination="aFs-Yd-MAy" id="ZVH-3y-oRK"/>
@@ -120,7 +128,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="149.59999999999999" y="123.68815592203899"/>
+            <point key="canvasLocation" x="42" y="124"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="G5Q-ia-P2m">
@@ -134,15 +142,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="タイトル（仮）" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3KO-NE-va4">
-                                <rect key="frame" x="60" y="95" width="254" height="72"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="PixelMplus12-Regular" family="PixelMplus12" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleAspectFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KjU-Um-v7v">
-                                <rect key="frame" x="122" y="426" width="130" height="60"/>
+                                <rect key="frame" x="122" y="406" width="130" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="PixelMplus12-Regular" family="PixelMplus12" pointSize="17"/>
                                 <state key="normal" backgroundImage="startBtn.png">
@@ -153,14 +154,14 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Developed by Tomoyuki Hayakawa" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ip-kb-GpS">
-                                <rect key="frame" x="16" y="638" width="343" height="21"/>
+                                <rect key="frame" x="16" y="633" width="343" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="PixelMplus12-Regular" family="PixelMplus12" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2JW-Ew-8yd">
-                                <rect key="frame" x="122" y="515" width="130" height="60"/>
+                                <rect key="frame" x="122" y="495" width="130" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="PixelMplus12-Regular" family="PixelMplus12" pointSize="17"/>
                                 <state key="normal" backgroundImage="asobikataBtn.png">
@@ -170,6 +171,10 @@
                                     <segue destination="H4V-LL-OAH" kind="presentation" id="uze-bD-ffc"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bbb_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="42Y-4e-lTT">
+                                <rect key="frame" x="45" y="120" width="285" height="152"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -198,17 +203,17 @@
                                     <segue destination="tQy-jU-CUm" kind="presentation" id="PSj-uI-Mts"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="howToImage_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="F5M-5A-Ity">
+                                <rect key="frame" x="15" y="20" width="345" height="500"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <pageControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="4" translatesAutoresizingMaskIntoConstraints="NO" id="aqV-mc-Mg4">
-                                <rect key="frame" x="168" y="537" width="39" height="37"/>
+                                <rect key="frame" x="0.0" y="542" width="375" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="pageControlWithSender:" destination="H4V-LL-OAH" eventType="valueChanged" id="cYA-JZ-7Rp"/>
                                 </connections>
                             </pageControl>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="howToImage_01.png" translatesAutoresizingMaskIntoConstraints="NO" id="F5M-5A-Ity">
-                                <rect key="frame" x="15" y="20" width="345" height="500"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -218,7 +223,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i0U-tT-zcb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-780" y="912"/>
+            <point key="canvasLocation" x="-631" y="788"/>
         </scene>
     </scenes>
     <resources>
@@ -226,6 +231,7 @@
         <image name="asobikataBtn.png" width="675" height="355"/>
         <image name="backBtn.png" width="1048" height="355"/>
         <image name="bar_01.png" width="81" height="21"/>
+        <image name="bbb_logo.png" width="1309" height="1095"/>
         <image name="block_blue.png" width="338" height="68"/>
         <image name="block_green.png" width="339" height="68"/>
         <image name="block_red.png" width="339" height="68"/>
@@ -236,6 +242,6 @@
         <image name="topImage.png" width="1563" height="834"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="PSj-uI-Mts"/>
+        <segue reference="r9M-xB-7Z8"/>
     </inferredMetricsTieBreakers>
 </document>
